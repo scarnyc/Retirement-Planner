@@ -73,7 +73,7 @@ def apply_custom_styles():
         
         /* Sidebar styles */
         .sidebar .sidebar-content {
-            background-color: #F5F7FA;
+            background-color: #FFFFFF;
         }
         
         /* Improve sidebar text visibility */
@@ -102,6 +102,33 @@ def apply_custom_styles():
         [data-testid="stSidebar"] .sidebar-content h4 {
             color: #006D75 !important;
             font-weight: 600 !important;
+        }
+        
+        /* Improve number input visibility */
+        [data-testid="stSidebar"] input[type="number"] {
+            color: #333333 !important;
+            background-color: #FFFFFF !important;
+            border: 1px solid #E0E0E0 !important;
+        }
+        
+        /* Make sidebar input labels more visible */
+        [data-testid="stSidebar"] .stNumberInput label,
+        [data-testid="stSidebar"] .stSelectbox label {
+            color: #333333 !important;
+            font-weight: 600 !important;
+        }
+        
+        /* Style expander background */
+        [data-testid="stSidebar"] .streamlit-expanderContent {
+            background-color: #FFFFFF !important;
+            border-radius: 4px;
+            padding: 8px !important;
+        }
+        
+        /* Style info boxes in sidebar */
+        [data-testid="stSidebar"] .stAlert {
+            background-color: rgba(0, 109, 117, 0.1) !important;
+            color: #333333 !important;
         }
         
         /* Expander styles */
