@@ -1,0 +1,43 @@
+A comprehensive retirement savings calculator dashboard that helps visualize and project retirement savings considering multiple income sources, deductions, and economic factors at key time horizons.
+
+Core Features:
+Calculate and display retirement savings projections considering salary, bonuses, RSUs, and investment returns (401k, HSA, IRA, HYS)
+Factor in tax implications (federal and NY state), inflation adjustments, and maximum contribution limits
+Show savings projections at key time horizons using Plotly graphs
+Account for expenses, 26 annual paychecks, employer contributions, and dividend income
+
+Retirement Horizon:
+Current Age: 35 years
+Retirement Age: 65 years
+Years Until Retirement: 30 years
+Current Balances:
+Current savings: $243,543
+Current Roth IRA: $63,181
+Current Traditional IRA: $93,974
+Current HSA: $9,869
+Current Roth 401k: $81,988
+Current Traditional 401k: $40,140
+Current monthly expenses: $6,100
+Current Assumptions:
+Annual salary: $182,753
+Annual RSU Grant: $10,000
+Annual Merit Increase: 3.25%
+Annual Investment Return: 6% (a common assumption for long-term stock market returns)
+Annual bonus: $36,551
+Current APY on savings: 3.8%
+Annual 401k contributions: Annual Maximum (currently $23,500 in 2025)
+Annual HSA contributions: Annual Maximum (currently $3,300 in 2025, factoring employer contribution)
+Annual IRA contributions: $0
+401k Roth Contribution 6% per paycheck
+401k traditional contribution 8% per paycheck
+Employer 401k match: 6% 
+Employer contribution HSA: $1,000 per year
+
+Visual References:
+Inspired by Vanguard's retirement planning tools and Fidelity's wealth management dashboards, known for their clear financial data visualization and projection tools.
+
+Style Guide:
+Colors: Primary #006D75 (teal), Secondary #2E5E82 (navy), Accent #FFB74D (gold), Background #F5F7FA (light grey), Text #333333 (dark grey), Success #4CAF50 (green)
+Design: Inter/Roboto fonts, clean dashboard layout with input forms and large visualization areas, clear data labels, responsive design with easy-to-read numbers and charts
+
+Don’t write the code yet. For now, just come up with the plan.
