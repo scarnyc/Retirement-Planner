@@ -253,15 +253,25 @@ insights_col1, insights_col2 = st.columns(2)
 with insights_col1:
     st.subheader("Retirement Summary")
     st.markdown(f"* **Retirement Year:** {retirement_year}")
+    
+    # Calculate inflation-adjusted (present value) of the final balance
+    years_in_projection = len(projection_data) - 1
+    inflation_adjusted_balance = final_balance / ((1 + INFLATION_RATE) ** years_in_projection)
+    
     st.markdown(f"* **Projected Final Balance:** ${final_balance:,.2f}")
+    st.markdown(f"* **Present Value of Final Balance:** ${inflation_adjusted_balance:,.2f}")
     st.markdown(f"* **Estimated Monthly Income:** ${monthly_retirement_income:,.2f}")
     
+    # Calculate inflation-adjusted monthly income
+    inflation_adjusted_monthly_income = inflation_adjusted_balance * 0.04 / 12
+    st.markdown(f"* **Present Value of Monthly Income:** ${inflation_adjusted_monthly_income:,.2f}")
+    
     # Compare to current expenses
-    income_ratio = monthly_retirement_income / monthly_expenses
+    income_ratio = monthly_retirement_income / projection_data.iloc[-1]['Monthly Expenses']
     if income_ratio >= 1:
-        st.success(f"Projected monthly income covers {income_ratio:.1f}x your current expenses")
+        st.success(f"Projected monthly income covers {income_ratio:.1f}x your future expenses")
     else:
-        st.warning(f"Projected monthly income covers only {income_ratio:.1f}x your current expenses")
+        st.warning(f"Projected monthly income covers only {income_ratio:.1f}x your future expenses")
 
 with insights_col2:
     st.subheader("Optimization Opportunities")
