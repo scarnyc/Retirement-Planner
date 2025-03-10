@@ -117,8 +117,17 @@ def create_retirement_projection_chart(projection_data):
         paper_bgcolor='#F5F7FA',
         yaxis=dict(
             gridcolor='#E0E0E0',
-            tickformat='$,.0f'
+            tickformat='$,.0f',
+            title_font=dict(color='#333333')
         ),
+        xaxis=dict(
+            title_font=dict(color='#333333'),
+            tickfont=dict(color='#333333')
+        ),
+        yaxis_tickfont=dict(color='#333333'),
+        title_font=dict(color='#333333'),
+        legend_font=dict(color='#333333'),
+        font=dict(color='#333333'),
         hovermode='x unified',
         height=600
     )
@@ -196,7 +205,9 @@ def create_allocation_pie_chart(allocation_data):
         showlegend=False,
         plot_bgcolor='#F5F7FA',
         paper_bgcolor='#F5F7FA',
-        height=500
+        height=500,
+        title_font=dict(color='#333333'),
+        font=dict(color='#333333')
     )
     
     # Add center text
@@ -249,7 +260,8 @@ def create_savings_milestone_chart(milestones, current_total):
     fig.update_layout(
         plot_bgcolor='#F5F7FA',
         paper_bgcolor='#F5F7FA',
-        height=500
+        height=500,
+        font=dict(color='#333333')
     )
     
     # Add a subtitle with percentage toward goal
