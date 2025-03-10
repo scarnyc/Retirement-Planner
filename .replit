@@ -6,7 +6,7 @@ channel = "stable-24_05"
 
 [deployment]
 deploymentTarget = "autoscale"
-run = ["sh", "-c", "streamlit run main.py --server.address 0.0.0.0 --server.port 8503 --server.headless true --server.enableCORS=false --server.enableWebsocketCompression=false"]
+run = ["sh", "-c", "streamlit run main.py --server.address 0.0.0.0 --server.port 8503 --server.headless true --server.enableCORS=false --server.enableXsrfProtection=false --server.enableWebsocketCompression=false"]
 
 [workflows]
 runButton = "Streamlit App"
@@ -32,9 +32,9 @@ task = "packager.installForAll"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "streamlit run main.py --server.address 0.0.0.0 --server.port 8503"
+args = "streamlit run main.py --server.address 0.0.0.0 --server.port 8503 --server.headless true --server.enableCORS=false --server.enableXsrfProtection=false --server.enableWebsocketCompression=false"
 waitForPort = 8502
 
 [[ports]]
 localPort = 8503
-externalPort = 80
+externalPort = 8503
