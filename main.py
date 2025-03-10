@@ -105,8 +105,12 @@ with col3:
 # Retirement projections
 st.header("Retirement Projections")
 
-# Calculate projections
-projection_data = calculate_retirement_projections(
+# Add tax and expenses tab
+projection_tabs = st.tabs(["Growth Projections", "Tax & Expense Impact"])
+
+with projection_tabs[0]:
+    # Calculate projections
+    projection_data = calculate_retirement_projections(
     current_age=current_age,
     retirement_age=retirement_age,
     current_savings=current_savings,
@@ -125,11 +129,84 @@ projection_data = calculate_retirement_projections(
     trad_401k_percent=trad_401k_percent/100,
     employer_401k_match=employer_401k_match/100,
     employer_hsa_contribution=employer_hsa_contribution,
-    annual_ira_contribution=annual_ira_contribution
+    annual_ira_contribution=annual_ira_contribution,
+    monthly_expenses=monthly_expenses,
+    filing_status="single"
 )
 
 # Display projection chart
-st.plotly_chart(create_retirement_projection_chart(projection_data), use_container_width=True)
+    st.plotly_chart(create_retirement_projection_chart(projection_data), use_container_width=True)
+
+with projection_tabs[1]:
+    # Create a dataframe for tax and expense visualization
+    retirement_year = projection_data[projection_data['Age'] == retirement_age].index[0]
+    
+    # Tax impact chart
+    if 'Taxes Paid' in projection_data.columns:
+        tax_fig = go.Figure()
+        
+        tax_fig.add_trace(go.Bar(
+            x=projection_data['Year'],
+            y=projection_data['Taxes Paid'],
+            name='Taxes Paid',
+            marker_color='#FF5252'
+        ))
+        
+        # Add annual expenses line
+        tax_fig.add_trace(go.Scatter(
+            x=projection_data['Year'],
+            y=projection_data['Annual Expenses'],
+            name='Annual Expenses',
+            line=dict(color='#FFB74D', width=2, dash='dot')
+        ))
+        
+        # Add vertical line at retirement
+        tax_fig.add_vline(
+            x=projection_data.loc[retirement_year, 'Year'],
+            line_width=2,
+            line_dash="dash",
+            line_color="#2E5E82",
+            annotation_text="Retirement"
+        )
+        
+        tax_fig.update_layout(
+            title='Tax Impact and Expenses Over Time',
+            xaxis_title='Year',
+            yaxis_title='Amount ($)',
+            barmode='stack',
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+            plot_bgcolor='#F5F7FA',
+            paper_bgcolor='#F5F7FA',
+            yaxis=dict(gridcolor='#E0E0E0', tickformat='$,.0f'),
+            height=500
+        )
+        
+        st.plotly_chart(tax_fig, use_container_width=True)
+        
+        # Show tax efficiency metrics
+        tax_metrics_cols = st.columns(3)
+        
+        with tax_metrics_cols[0]:
+            pre_retirement_taxes = projection_data.loc[:retirement_year, 'Taxes Paid'].sum()
+            st.metric("Pre-Retirement Tax Total", f"${pre_retirement_taxes:,.0f}")
+            
+        with tax_metrics_cols[1]:
+            post_retirement_taxes = projection_data.loc[retirement_year+1:, 'Taxes Paid'].sum()
+            st.metric("Post-Retirement Tax Total", f"${post_retirement_taxes:,.0f}")
+            
+        with tax_metrics_cols[2]:
+            total_taxes = projection_data['Taxes Paid'].sum()
+            st.metric("Lifetime Tax Estimate", f"${total_taxes:,.0f}")
+        
+        st.info("""
+        **Tax Efficiency Tips:**
+        - Consider tax-diversification strategies (mix of pre-tax and Roth accounts)
+        - In high-income years, prioritize pre-tax contributions
+        - In lower-income years, prioritize Roth contributions
+        - Consider Roth conversions during low-income years after retirement
+        """)
+    else:
+        st.warning("Tax data is not available in the projections.")
 
 # Allocation and milestones
 col1, col2 = st.columns(2)
@@ -205,6 +282,16 @@ with insights_col2:
         st.warning(f"Your current savings rate is {savings_rate:.1f}%. Financial experts often recommend saving at least 15% of income for retirement.")
     else:
         st.success(f"Your current savings rate is {savings_rate:.1f}%, which meets or exceeds expert recommendations.")
+    
+    # Tax efficiency analysis
+    if trad_401k_percent < roth_401k_percent and annual_salary > 100000:
+        st.info("Given your income level, you might benefit from increasing pre-tax (Traditional) contributions to reduce current tax burden.")
+    elif trad_401k_percent > roth_401k_percent and annual_salary < 80000:
+        st.info("At your income level, you might benefit from more Roth contributions for tax-free growth.")
+    
+    # Expense inflation awareness
+    retirement_year_expenses = projection_data.loc[projection_data['Age'] == retirement_age, 'Annual Expenses'].values[0]
+    st.info(f"Your current monthly expenses of ${monthly_expenses:.2f} will grow to approximately ${retirement_year_expenses/12:.2f}/month by retirement due to inflation.")
 
 # Footer
 st.markdown("---")
