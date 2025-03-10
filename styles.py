@@ -26,9 +26,15 @@ def apply_custom_styles():
             font-weight: 500;
         }
         
-        .stMetric .metric-value {
+        .stMetric .css-1xarl3l {
             color: #333333;
             font-weight: 700;
+        }
+        
+        /* Additional metric value styling to ensure visibility */
+        .css-1649tca-annotationValue {
+            color: #333333 !important;
+            font-weight: 700 !important;
         }
         
         /* Sidebar styles */
