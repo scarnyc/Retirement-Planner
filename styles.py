@@ -76,6 +76,34 @@ def apply_custom_styles():
             background-color: #F5F7FA;
         }
         
+        /* Improve sidebar text visibility */
+        .sidebar .block-container {
+            color: #333333;
+        }
+        
+        /* Ensure all sidebar text elements are visible */
+        [data-testid="stSidebar"] label,
+        [data-testid="stSidebar"] .stMarkdown,
+        [data-testid="stSidebar"] p,
+        [data-testid="stSidebar"] span,
+        [data-testid="stSidebar"] div:not([class*="st"]),
+        [data-testid="stSidebar"] .stExpander label,
+        [data-testid="stSidebar"] .stNumberInput label,
+        [data-testid="stSidebar"] .stSelectbox label,
+        [data-testid="stSidebar"] .streamlit-expanderHeader {
+            color: #333333 !important;
+            font-weight: 500 !important;
+        }
+        
+        /* Make sidebar header text visible and prominent */
+        [data-testid="stSidebar"] .sidebar-content h1,
+        [data-testid="stSidebar"] .sidebar-content h2,
+        [data-testid="stSidebar"] .sidebar-content h3,
+        [data-testid="stSidebar"] .sidebar-content h4 {
+            color: #006D75 !important;
+            font-weight: 600 !important;
+        }
+        
         /* Expander styles */
         .streamlit-expanderHeader {
             background-color: #F5F7FA;
