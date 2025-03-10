@@ -121,11 +121,13 @@ def calculate_retirement_projections(
         annual_trad_401k_contribution = trad_401k_contribution_per_paycheck * paychecks_per_year
         
         # Calculate employer match
+        # Match percentage of salary up to the employee contribution amount
         match_eligible_contribution = min(
             paycheck_amount * employer_401k_match * paychecks_per_year,
             (roth_401k_contribution_per_paycheck + trad_401k_contribution_per_paycheck) * paychecks_per_year
         )
-        employer_contribution = min(match_eligible_contribution, contribution_limits['401k'] - annual_401k_contribution)
+        # The match should not be restricted by the 401k limit as that's already applied to employee contribution
+        employer_contribution = match_eligible_contribution
         
         # Add employer contribution to Traditional 401k
         annual_trad_401k_contribution += employer_contribution
