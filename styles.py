@@ -26,13 +26,18 @@ def apply_custom_styles():
             font-weight: 500;
         }
         
-        .stMetric .css-1xarl3l {
-            color: #333333;
-            font-weight: 700;
-        }
-        
-        /* Additional metric value styling to ensure visibility */
-        .css-1649tca-annotationValue {
+        /* Comprehensive metric value styling to ensure visibility */
+        .stMetric .css-1xarl3l,
+        .stMetric div[data-testid="stMetricValue"],
+        .stMetric [data-testid="stMetricValue"] > div,
+        .css-1649tca-annotationValue,
+        .css-10trblm,
+        .css-1qg75gu,
+        .css-81oif8,
+        .stMetric > div > div > div > div,
+        .stMetric span,
+        div[data-testid="stMetricLabel"] ~ div,
+        div[data-testid="stMetricValue"] {
             color: #333333 !important;
             font-weight: 700 !important;
         }
