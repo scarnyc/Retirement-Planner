@@ -39,3 +39,4 @@ waitForPort = 8503
 localPort = 8503
 externalPort = 8503
 ipAddr = "0.0.0.0"
+exposeLocalhost = true
