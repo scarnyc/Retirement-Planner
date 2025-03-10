@@ -42,6 +42,35 @@ def apply_custom_styles():
             font-weight: 700 !important;
         }
         
+        /* Fix text visibility in tabs and projection sections */
+        .stTabs [data-baseweb="tab-panel"] p,
+        .stTabs [data-baseweb="tab-panel"] div,
+        .stTabs [data-baseweb="tab-panel"] span,
+        .stTabs [data-baseweb="tab-list"] button,
+        .block-container p,
+        .block-container li,
+        .block-container div:not([class*="st"]),
+        .dataframe th,
+        .dataframe td {
+            color: #333333 !important;
+        }
+        
+        /* Fix tab panel visibility */
+        [data-baseweb="tab-panel"] {
+            color: #333333 !important;
+        }
+        
+        /* Fix table text colors */
+        .stDataFrame tbody tr td {
+            color: #333333 !important;
+        }
+        
+        /* Make tab labels more visible */
+        .stTabs [role="tab"][aria-selected="true"] {
+            background-color: rgba(0, 109, 117, 0.1);
+            font-weight: 600;
+        }
+        
         /* Sidebar styles */
         .sidebar .sidebar-content {
             background-color: #F5F7FA;
