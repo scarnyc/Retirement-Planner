@@ -301,7 +301,7 @@ with insights_col2:
     
     # Expense inflation awareness
     retirement_year_expenses = projection_data.loc[projection_data['Age'] == retirement_age, 'Annual Expenses'].values[0]
-    st.info(f"Your current monthly expenses of ${monthly_expenses:.2f} will grow to approximately ${retirement_year_expenses/12:.2f} /month by retirement due to inflation.")
+    st.info(f"Your current monthly expenses of ${monthly_expenses:.2f} will grow to approximately ${retirement_year_expenses/12:.2f}/month by retirement due to inflation.")
 
 # Footer
 st.markdown("---")
