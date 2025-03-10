@@ -5,11 +5,7 @@ address = "0.0.0.0"
 headless = true
 enableCORS = false
 enableWebsocketCompression = false
-[server]
-headless = true
-enableCORS = false
 enableXsrfProtection = false
-enableWebsocketCompression = false
 
 [browser]
 gatherUsageStats = false
