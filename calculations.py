@@ -85,11 +85,30 @@ def calculate_retirement_projections(
     # Number of paychecks per year
     paychecks_per_year = 26
     
+    # Cap on annual merit increases (salary growth slows over time)
+    max_merit_years = 15
+    reduced_merit_rate = annual_merit_increase * 0.5  # After max years, merit rate is halved
+    
+    # Adjust return rates based on portfolio age (more conservative as retirement approaches)
+    def get_adjusted_return(year, base_return):
+        years_left = max(0, retirement_age - (current_age + year))
+        if years_left > 20:
+            return base_return
+        elif years_left > 10:
+            return base_return * 0.9  # 10% reduction for moderate risk
+        elif years_left > 5:
+            return base_return * 0.8  # 20% reduction for lower risk
+        else:
+            return base_return * 0.7  # 30% reduction for conservative approach
+    
     # Project for each year
     for year in range(1, len(projections)):
         # Update age and year
         projections.loc[year, 'Age'] = current_age + year
         projections.loc[year, 'Year'] = CURRENT_YEAR + year
+        
+        # Get adjusted investment return based on years to retirement
+        adjusted_return = get_adjusted_return(year, investment_return)
         
         # Update expenses with inflation
         projections.loc[year, 'Monthly Expenses'] = projections.loc[year-1, 'Monthly Expenses'] * (1 + INFLATION_RATE)
@@ -108,12 +127,16 @@ def calculate_retirement_projections(
             for account_type in contribution_limits:
                 contribution_limits[account_type] *= (1 + INFLATION_RATE)
             
-            # Calculate new salary with merit increase
-            projections.loc[year, 'Salary'] = projections.loc[year-1, 'Salary'] * (1 + annual_merit_increase)
+            # Calculate new salary with merit increase (capped over time to be more realistic)
+            current_merit_rate = annual_merit_increase
+            if year > max_merit_years:
+                current_merit_rate = reduced_merit_rate
+            
+            projections.loc[year, 'Salary'] = projections.loc[year-1, 'Salary'] * (1 + current_merit_rate)
             
             # Adjust bonus and RSU with merit increase too
-            projections.loc[year, 'Bonus'] = projections.loc[year-1, 'Bonus'] * (1 + annual_merit_increase)
-            projections.loc[year, 'RSU'] = projections.loc[year-1, 'RSU'] * (1 + annual_merit_increase)
+            projections.loc[year, 'Bonus'] = projections.loc[year-1, 'Bonus'] * (1 + current_merit_rate)
+            projections.loc[year, 'RSU'] = projections.loc[year-1, 'RSU'] * (1 + current_merit_rate)
         
         # Current year values
         salary = projections.loc[year, 'Salary']
@@ -167,39 +190,51 @@ def calculate_retirement_projections(
             annual_trad_401k_contribution += employer_contribution
             
             # Calculate HSA contribution
-            employee_hsa_contribution = max(0, contribution_limits['HSA'] - employer_hsa_contribution)
+            employee_hsa_contribution = max(0, min(contribution_limits['HSA'] - employer_hsa_contribution, 
+                                              contribution_limits['HSA'] * 0.8))  # Realistic employee contribution
             total_hsa_contribution = employee_hsa_contribution + employer_hsa_contribution
+            
+            # Limit IRA contribution based on IRS income limits (simplified)
+            effective_ira_contribution = annual_ira_contribution
+            if pre_tax_income > 150000:  # Simplified phaseout threshold
+                reduction_factor = min(1.0, (pre_tax_income - 150000) / 30000)
+                effective_ira_contribution = annual_ira_contribution * (1 - reduction_factor)
             
             # Update account balances with new contributions and returns
             # High-Yield Savings (assuming extra disposable income goes here)
             extra_savings = max(0, disposable_income)  # Any extra money after expenses goes to savings
+            
+            # Cap the extra savings to make it more realistic (people don't save everything)
+            realistic_savings_rate = min(0.7, extra_savings / after_tax_income)  # Cap at 70% of after-tax income
+            realistic_extra_savings = extra_savings * realistic_savings_rate
+            
             projections.loc[year, 'High-Yield Savings'] = (
                 projections.loc[year-1, 'High-Yield Savings'] * (1 + savings_apy) + 
-                extra_savings
+                realistic_extra_savings
             )
             
             # Retirement accounts with market returns
             projections.loc[year, 'Roth IRA'] = (
-                projections.loc[year-1, 'Roth IRA'] * (1 + investment_return) + 
-                min(annual_ira_contribution, contribution_limits['IRA'])
+                projections.loc[year-1, 'Roth IRA'] * (1 + adjusted_return) + 
+                min(effective_ira_contribution, contribution_limits['IRA'])
             )
             
             projections.loc[year, 'Traditional IRA'] = (
-                projections.loc[year-1, 'Traditional IRA'] * (1 + investment_return)
+                projections.loc[year-1, 'Traditional IRA'] * (1 + adjusted_return)
             )
             
             projections.loc[year, 'HSA'] = (
-                projections.loc[year-1, 'HSA'] * (1 + investment_return) + 
+                projections.loc[year-1, 'HSA'] * (1 + adjusted_return) + 
                 total_hsa_contribution
             )
             
             projections.loc[year, 'Roth 401k'] = (
-                projections.loc[year-1, 'Roth 401k'] * (1 + investment_return) + 
+                projections.loc[year-1, 'Roth 401k'] * (1 + adjusted_return) + 
                 annual_roth_401k_contribution
             )
             
             projections.loc[year, 'Traditional 401k'] = (
-                projections.loc[year-1, 'Traditional 401k'] * (1 + investment_return) + 
+                projections.loc[year-1, 'Traditional 401k'] * (1 + adjusted_return) + 
                 annual_trad_401k_contribution
             )
             
@@ -207,7 +242,7 @@ def calculate_retirement_projections(
             projections.loc[year, '401k Contribution'] = annual_401k_contribution
             projections.loc[year, 'Employer 401k Match'] = employer_contribution
             projections.loc[year, 'HSA Contribution'] = total_hsa_contribution
-            projections.loc[year, 'IRA Contribution'] = min(annual_ira_contribution, contribution_limits['IRA'])
+            projections.loc[year, 'IRA Contribution'] = min(effective_ira_contribution, contribution_limits['IRA'])
             
         # RETIREMENT PHASE CALCULATIONS
         else:
@@ -217,16 +252,19 @@ def calculate_retirement_projections(
             projections.loc[year, 'HSA Contribution'] = 0
             projections.loc[year, 'IRA Contribution'] = 0
             
+            # Use a more conservative return rate in retirement
+            retirement_return = adjusted_return * 0.8  # More conservative in retirement
+            
             # Calculate required withdrawals for expenses
             withdrawal_needed = annual_expenses
             
-            # Apply growth to accounts first
+            # Apply growth to accounts first (with more conservative returns)
             high_yield_savings_growth = projections.loc[year-1, 'High-Yield Savings'] * savings_apy
-            roth_ira_growth = projections.loc[year-1, 'Roth IRA'] * investment_return
-            trad_ira_growth = projections.loc[year-1, 'Traditional IRA'] * investment_return
-            hsa_growth = projections.loc[year-1, 'HSA'] * investment_return
-            roth_401k_growth = projections.loc[year-1, 'Roth 401k'] * investment_return
-            trad_401k_growth = projections.loc[year-1, 'Traditional 401k'] * investment_return
+            roth_ira_growth = projections.loc[year-1, 'Roth IRA'] * retirement_return
+            trad_ira_growth = projections.loc[year-1, 'Traditional IRA'] * retirement_return
+            hsa_growth = projections.loc[year-1, 'HSA'] * retirement_return
+            roth_401k_growth = projections.loc[year-1, 'Roth 401k'] * retirement_return
+            trad_401k_growth = projections.loc[year-1, 'Traditional 401k'] * retirement_return
             
             # Apply growth to accounts
             projections.loc[year, 'High-Yield Savings'] = projections.loc[year-1, 'High-Yield Savings'] + high_yield_savings_growth
