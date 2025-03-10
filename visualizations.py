@@ -58,6 +58,24 @@ def create_retirement_projection_chart(projection_data):
         line=dict(width=0.5, color='#9C27B0')
     ))
     
+    # Add retirement expenses if available
+    if 'Annual Expenses' in projection_data.columns:
+        # Find retirement age
+        retirement_age = projection_data['Age'].max()
+        retirement_year_idx = projection_data[projection_data['Age'] == retirement_age].index[0]
+        
+        # Create expenses projection (show from retirement onward)
+        retirement_years = projection_data.loc[retirement_year_idx:, 'Year']
+        retirement_expenses = projection_data.loc[retirement_year_idx:, 'Annual Expenses']
+        
+        fig.add_trace(go.Scatter(
+            x=retirement_years,
+            y=retirement_expenses,
+            name='Annual Retirement Expenses',
+            line=dict(dash='dash', width=2, color='#FF5252'),
+            mode='lines'
+        ))
+    
     # Add a line for total balance
     fig.add_trace(go.Scatter(
         x=projection_data['Year'],
@@ -66,6 +84,22 @@ def create_retirement_projection_chart(projection_data):
         line=dict(width=3, color='#333333'),
         mode='lines'
     ))
+    
+    # Add retirement line
+    if 'Age' in projection_data.columns:
+        retirement_ages = projection_data['Age'].unique()
+        if len(retirement_ages) > 1:
+            retirement_age = retirement_ages[len(retirement_ages) // 2]  # Middle value as approx
+            retirement_year_idx = projection_data[projection_data['Age'] == retirement_age].index[0]
+            retirement_year = projection_data.loc[retirement_year_idx, 'Year']
+            
+            fig.add_vline(
+                x=retirement_year,
+                line_width=2,
+                line_dash="dash",
+                line_color="#2E5E82",
+                annotation_text="Retirement"
+            )
     
     # Customize layout
     fig.update_layout(
