@@ -89,6 +89,11 @@ def calculate_retirement_projections(
     max_merit_years = 15
     reduced_merit_rate = annual_merit_increase * 0.5  # After max years, merit rate is halved
     
+    # Calculate real return rates (adjusted for inflation)
+    # This provides more realistic projections by accounting for inflation's effect on returns
+    real_investment_return = (1 + investment_return) / (1 + INFLATION_RATE) - 1
+    real_savings_apy = (1 + savings_apy) / (1 + INFLATION_RATE) - 1
+    
     # Adjust return rates based on portfolio age (more conservative as retirement approaches)
     def get_adjusted_return(year, base_return):
         years_left = max(0, retirement_age - (current_age + year))
@@ -108,7 +113,8 @@ def calculate_retirement_projections(
         projections.loc[year, 'Year'] = CURRENT_YEAR + year
         
         # Get adjusted investment return based on years to retirement
-        adjusted_return = get_adjusted_return(year, investment_return)
+        # Use real returns (inflation-adjusted) for more accurate projections
+        adjusted_return = get_adjusted_return(year, real_investment_return)
         
         # Update expenses with inflation
         projections.loc[year, 'Monthly Expenses'] = projections.loc[year-1, 'Monthly Expenses'] * (1 + INFLATION_RATE)
@@ -209,7 +215,7 @@ def calculate_retirement_projections(
             realistic_extra_savings = extra_savings * realistic_savings_rate
             
             projections.loc[year, 'High-Yield Savings'] = (
-                projections.loc[year-1, 'High-Yield Savings'] * (1 + savings_apy) + 
+                projections.loc[year-1, 'High-Yield Savings'] * (1 + real_savings_apy) + 
                 realistic_extra_savings
             )
             
@@ -259,7 +265,8 @@ def calculate_retirement_projections(
             withdrawal_needed = annual_expenses
             
             # Apply growth to accounts first (with more conservative returns)
-            high_yield_savings_growth = projections.loc[year-1, 'High-Yield Savings'] * savings_apy
+            # Use real returns (inflation-adjusted) for all growth calculations
+            high_yield_savings_growth = projections.loc[year-1, 'High-Yield Savings'] * real_savings_apy
             roth_ira_growth = projections.loc[year-1, 'Roth IRA'] * retirement_return
             trad_ira_growth = projections.loc[year-1, 'Traditional IRA'] * retirement_return
             hsa_growth = projections.loc[year-1, 'HSA'] * retirement_return
