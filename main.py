@@ -254,12 +254,12 @@ with insights_col1:
     st.subheader("Retirement Summary")
     st.markdown(f"* **Retirement Year:** {retirement_year}")
     
-    # Calculate inflation-adjusted (present value) of the final balance
+    # Get both inflation-adjusted and nominal values for comparison
     years_in_projection = len(projection_data) - 1
     inflation_adjusted_balance = final_balance / ((1 + INFLATION_RATE) ** years_in_projection)
     
-    st.markdown(f"* **Projected Final Balance:** ${final_balance:,.2f}")
-    st.markdown(f"* **Present Value of Final Balance:** ${inflation_adjusted_balance:,.2f}")
+    st.markdown(f"* **Projected Final Balance (Future Value):** ${final_balance:,.2f}")
+    st.markdown(f"* **Projected Final Balance (Present Value):** ${inflation_adjusted_balance:,.2f}")
     st.markdown(f"* **Estimated Monthly Income:** ${monthly_retirement_income:,.2f}")
     
     # Calculate inflation-adjusted monthly income
