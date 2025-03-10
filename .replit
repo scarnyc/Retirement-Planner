@@ -38,5 +38,3 @@ waitForPort = 8503
 [[ports]]
 localPort = 8503
 externalPort = 80
-ipAddr = "0.0.0.0"
-exposeLocalhost = true
