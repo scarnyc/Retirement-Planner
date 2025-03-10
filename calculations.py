@@ -114,8 +114,8 @@ def calculate_retirement_projections(
         projections.loc[year, 'Year'] = CURRENT_YEAR + year
         
         # Get adjusted investment return based on years to retirement
-        # Use real returns (inflation-adjusted) for more accurate projections
-        adjusted_return = get_adjusted_return(year, real_investment_return)
+        # Use nominal returns for more accurate growth projections
+        adjusted_return = get_adjusted_return(year, nominal_investment_return)
         
         # Update expenses with inflation
         projections.loc[year, 'Monthly Expenses'] = projections.loc[year-1, 'Monthly Expenses'] * (1 + INFLATION_RATE)
