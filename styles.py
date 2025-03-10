@@ -72,13 +72,24 @@ def apply_custom_styles():
         }
         
         /* Sidebar styles */
-        .sidebar .sidebar-content {
-            background-color: #FFFFFF;
+        .sidebar .sidebar-content,
+        [data-testid="stSidebar"],
+        [data-testid="stSidebar"] > div:first-child,
+        [data-testid="stSidebar"] .sidebar-content {
+            background-color: #FFFFFF !important;
         }
         
         /* Improve sidebar text visibility */
         .sidebar .block-container {
             color: #333333;
+        }
+        
+        /* Override dark mode settings in sidebar */
+        [data-testid="stSidebar"],
+        [data-testid="stSidebar"] > div,
+        [data-testid="stSidebar"] .stExpander,
+        [data-testid="stSidebar"] stExpanderContent {
+            background-color: #FFFFFF !important;
         }
         
         /* Ensure all sidebar text elements are visible */
@@ -119,10 +130,24 @@ def apply_custom_styles():
         }
         
         /* Style expander background */
-        [data-testid="stSidebar"] .streamlit-expanderContent {
+        [data-testid="stSidebar"] .streamlit-expanderContent,
+        [data-testid="stSidebar"] [data-baseweb="input"],
+        [data-testid="stSidebar"] [data-baseweb="select"] {
             background-color: #FFFFFF !important;
             border-radius: 4px;
             padding: 8px !important;
+        }
+        
+        /* Fix form elements in sidebar */
+        [data-testid="stSidebar"] input,
+        [data-testid="stSidebar"] select,
+        [data-testid="stSidebar"] .st-bq,
+        [data-testid="stSidebar"] .st-br, 
+        [data-testid="stSidebar"] .st-bs,
+        [data-testid="stSidebar"] [data-baseweb] {
+            background-color: #FFFFFF !important;
+            color: #333333 !important;
+            border-color: #E0E0E0 !important;
         }
         
         /* Style info boxes in sidebar */
