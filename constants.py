@@ -6,7 +6,7 @@ CURRENT_YEAR = datetime.now().year
 # Current contribution limits (2025 values)
 CURRENT_401K_LIMIT = 23500  # 2025 limit
 CURRENT_HSA_LIMIT = 3300  # 2025 limit
-CURRENT_IRA_LIMIT = 6500  # 2025 limit
+CURRENT_IRA_LIMIT = 7000  # 2025 limit
 
 # Economic constants
 INFLATION_RATE = 0.02  # 2% annual inflation
