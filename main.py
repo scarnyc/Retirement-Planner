@@ -208,32 +208,17 @@ with projection_tabs[1]:
     else:
         st.warning("Tax data is not available in the projections.")
 
-# Allocation and milestones
-col1, col2 = st.columns(2)
-
-with col1:
-    st.subheader("Current Retirement Allocation")
-    current_allocation = {
-        "High-Yield Savings": current_savings,
-        "Roth IRA": current_roth_ira,
-        "Traditional IRA": current_trad_ira,
-        "HSA": current_hsa,
-        "Roth 401k": current_roth_401k,
-        "Traditional 401k": current_trad_401k
-    }
-    st.plotly_chart(create_allocation_pie_chart(current_allocation), use_container_width=True)
-
-with col2:
-    st.subheader("Savings Milestones")
-    retirement_target = annual_expenses * 25  # 4% safe withdrawal rate assumption
-    milestones = {
-        "Current": total_current_savings,
-        "25%": retirement_target * 0.25,
-        "50%": retirement_target * 0.5,
-        "75%": retirement_target * 0.75,
-        "Target": retirement_target
-    }
-    st.plotly_chart(create_savings_milestone_chart(milestones, total_current_savings), use_container_width=True)
+# Current allocation
+st.subheader("Current Retirement Allocation")
+current_allocation = {
+    "High-Yield Savings": current_savings,
+    "Roth IRA": current_roth_ira,
+    "Traditional IRA": current_trad_ira,
+    "HSA": current_hsa,
+    "Roth 401k": current_roth_401k,
+    "Traditional 401k": current_trad_401k
+}
+st.plotly_chart(create_allocation_pie_chart(current_allocation), use_container_width=True)
 
 # Detailed projections table
 st.header("Detailed Projection Table")
