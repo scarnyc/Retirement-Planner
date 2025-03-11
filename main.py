@@ -54,14 +54,14 @@ with st.sidebar.expander("Personal Information", expanded=True):
 
 # Current balances
 with st.sidebar.expander("Current Balances", expanded=True):
-    current_savings = st.number_input("Current High-Yield Savings", min_value=0.0, value=243543.0, format="%.2f")
-    current_trad_ira = st.number_input("Current Traditional IRA", min_value=0.0, value=93974.0, format="%.2f")
-    current_trad_401k = st.number_input("Current Traditional 401k", min_value=0.0, value=40140.0, format="%.2f")
-    monthly_expenses = st.number_input("Current Monthly Expenses", min_value=0.0, value=6100.0, format="%.2f")
+    current_savings = st.number_input("Current High-Yield Savings", min_value=0.0, value=50000.0, format="%.2f")
+    current_trad_ira = st.number_input("Current Traditional IRA", min_value=0.0, value=50000.0, format="%.2f")
+    current_trad_401k = st.number_input("Current Traditional 401k", min_value=0.0, value=50000.0, format="%.2f")
+    monthly_expenses = st.number_input("Current Monthly Expenses", min_value=0.0, value=4000.0, format="%.2f")
 
 # Income and growth assumptions
 with st.sidebar.expander("Income & Growth", expanded=True):
-    annual_salary = st.number_input("Annual Salary", min_value=0.0, value=182753.0, format="%.2f")
+    annual_salary = st.number_input("Annual Salary", min_value=0.0, value=100000.0, format="%.2f")
     annual_merit_increase = st.number_input("Annual Merit Increase (%)", min_value=0.0, max_value=25.0, value=3.25, format="%.2f")
     investment_return = st.number_input("Annual Investment Return (%)", min_value=0.0, max_value=30.0, value=6.0, format="%.2f")
     savings_apy = st.number_input("Current APY on Savings (%)", min_value=0.0, max_value=20.0, value=3.8, format="%.2f")
@@ -69,7 +69,7 @@ with st.sidebar.expander("Income & Growth", expanded=True):
 # Contribution settings
 with st.sidebar.expander("Contributions", expanded=True):
     st.markdown(f"**401k Annual Limit: ${CURRENT_401K_LIMIT:,.0f}**")
-    roth_401k_percent = st.number_input("401k Roth Contribution (% per paycheck)", min_value=0.0, max_value=100.0, value=6.0, format="%.2f")
+    roth_401k_percent = st.number_input("401k Roth Contribution (% per paycheck)", min_value=0.0, max_value=100.0, value=0.0, format="%.2f")
     trad_401k_percent = st.number_input("401k Traditional Contribution (% per paycheck)", min_value=0.0, max_value=100.0, value=8.0, format="%.2f")
     employer_401k_match = st.number_input("Employer 401k Match (%)", min_value=0.0, max_value=100.0, value=6.0, format="%.2f")
     
