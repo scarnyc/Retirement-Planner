@@ -231,7 +231,9 @@ st.header("Detailed Projection Table")
 formatted_projection_data = projection_data.copy()
 numeric_columns = formatted_projection_data.select_dtypes(include=['float64', 'int64']).columns
 for col in numeric_columns:
-    formatted_projection_data[col] = formatted_projection_data[col].map(lambda x: f"${x:,.0f}" if pd.notnull(x) else x)
+    # Skip Age and Year columns for dollar sign formatting
+    if col not in ['Age', 'Year']:
+        formatted_projection_data[col] = formatted_projection_data[col].map(lambda x: f"${x:,.0f}" if pd.notnull(x) else x)
 
 st.dataframe(formatted_projection_data)
 
