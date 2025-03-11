@@ -250,13 +250,13 @@ with insights_col1:
     years_in_projection = len(projection_data) - 1
     inflation_adjusted_balance = final_balance / ((1 + INFLATION_RATE) ** years_in_projection)
     
-    st.markdown(f"* **Projected Final Balance (Future Value):** ${final_balance:,.2f}")
-    st.markdown(f"* **Projected Final Balance (Present Value):** ${inflation_adjusted_balance:,.2f}")
-    st.markdown(f"* **Estimated Monthly Income:** ${monthly_retirement_income:,.2f}")
+    st.markdown(f"* **Projected Final Balance (Future Value):** ${final_balance:,.0f}")
+    st.markdown(f"* **Projected Final Balance (Present Value):** ${inflation_adjusted_balance:,.0f}")
+    st.markdown(f"* **Estimated Monthly Income:** ${monthly_retirement_income:,.0f}")
     
     # Calculate inflation-adjusted monthly income
     inflation_adjusted_monthly_income = inflation_adjusted_balance * 0.04 / 12
-    st.markdown(f"* **Present Value of Monthly Income:** ${inflation_adjusted_monthly_income:,.2f}")
+    st.markdown(f"* **Present Value of Monthly Income:** ${inflation_adjusted_monthly_income:,.0f}")
     
     # Compare to current expenses
     income_ratio = monthly_retirement_income / projection_data.iloc[-1]['Monthly Expenses']
