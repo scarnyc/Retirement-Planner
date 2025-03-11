@@ -222,7 +222,14 @@ st.plotly_chart(create_allocation_pie_chart(current_allocation), use_container_w
 
 # Detailed projections table
 st.header("Detailed Projection Table")
-st.dataframe(projection_data)
+
+# Format numeric columns with commas
+formatted_projection_data = projection_data.copy()
+numeric_columns = formatted_projection_data.select_dtypes(include=['float64', 'int64']).columns
+for col in numeric_columns:
+    formatted_projection_data[col] = formatted_projection_data[col].map(lambda x: f"${x:,.0f}" if pd.notnull(x) else x)
+
+st.dataframe(formatted_projection_data)
 
 # Insights and recommendations
 st.header("Insights & Recommendations")
