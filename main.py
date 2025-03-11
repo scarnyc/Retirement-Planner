@@ -94,13 +94,13 @@ total_current_savings = calculate_total_current_savings(
 st.header("Current Financial Snapshot")
 col1, col2, col3 = st.columns(3)
 with col1:
-    st.metric("Total Current Savings", f"${total_current_savings:,.2f}")
+    st.metric("Total Current Savings", f"${total_current_savings:,.0f}")
 with col2:
     annual_expenses = monthly_expenses * 12
-    st.metric("Annual Expenses", f"${annual_expenses:,.2f}")
+    st.metric("Annual Expenses", f"${annual_expenses:,.0f}")
 with col3:
     annual_total_income = annual_salary + annual_bonus + annual_rsu
-    st.metric("Annual Income", f"${annual_total_income:,.2f}")
+    st.metric("Annual Income", f"${annual_total_income:,.0f}")
 
 # Retirement projections
 st.header("Retirement Projections")
