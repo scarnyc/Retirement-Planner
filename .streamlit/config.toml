@@ -4,15 +4,8 @@ headless = true
 enableCORS = false
 enableXsrfProtection = false
 port = 8504
-
-
-[server]
-port = 8503
 address = "0.0.0.0"
-headless = true
-enableCORS = false
 enableWebsocketCompression = false
-enableXsrfProtection = false
 
 [browser]
 gatherUsageStats = false
