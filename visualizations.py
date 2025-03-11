@@ -20,34 +20,10 @@ def create_retirement_projection_chart(projection_data):
     
     fig.add_trace(go.Scatter(
         x=projection_data['Year'],
-        y=projection_data['Roth IRA'],
-        name='Roth IRA',
-        stackgroup='one',
-        line=dict(width=0.5, color='#4CAF50')
-    ))
-    
-    fig.add_trace(go.Scatter(
-        x=projection_data['Year'],
         y=projection_data['Traditional IRA'],
         name='Traditional IRA',
         stackgroup='one',
         line=dict(width=0.5, color='#2E5E82')
-    ))
-    
-    fig.add_trace(go.Scatter(
-        x=projection_data['Year'],
-        y=projection_data['HSA'],
-        name='HSA',
-        stackgroup='one',
-        line=dict(width=0.5, color='#006D75')
-    ))
-    
-    fig.add_trace(go.Scatter(
-        x=projection_data['Year'],
-        y=projection_data['Roth 401k'],
-        name='Roth 401k',
-        stackgroup='one',
-        line=dict(width=0.5, color='#7986CB')
     ))
     
     fig.add_trace(go.Scatter(
@@ -181,10 +157,7 @@ def create_allocation_pie_chart(allocation_data):
     # Define colors for each category
     colors = {
         'High-Yield Savings': '#FFB74D',
-        'Roth IRA': '#4CAF50',
         'Traditional IRA': '#2E5E82',
-        'HSA': '#006D75',
-        'Roth 401k': '#7986CB',
         'Traditional 401k': '#9C27B0'
     }
     

@@ -15,34 +15,26 @@ def calculate_years_to_retirement(current_age, retirement_age):
     return retirement_age - current_age
 
 def calculate_total_current_savings(
-    current_savings, current_roth_ira, current_trad_ira, 
-    current_hsa, current_roth_401k, current_trad_401k
+    current_savings, current_trad_ira, current_trad_401k
 ):
     """Calculate total current retirement savings"""
     return (
-        current_savings + current_roth_ira + current_trad_ira + 
-        current_hsa + current_roth_401k + current_trad_401k
+        current_savings + current_trad_ira + current_trad_401k
     )
 
 def calculate_retirement_projections(
     current_age,
     retirement_age,
     current_savings,
-    current_roth_ira,
     current_trad_ira,
-    current_hsa,
-    current_roth_401k,
     current_trad_401k,
     annual_salary,
-    annual_bonus,
-    annual_rsu,
     annual_merit_increase,
     investment_return,
     savings_apy,
     roth_401k_percent,
     trad_401k_percent,
     employer_401k_match,
-    employer_hsa_contribution,
     annual_ira_contribution,
     monthly_expenses=0.0,
     filing_status="single"
@@ -60,19 +52,13 @@ def calculate_retirement_projections(
     projections.loc[0, 'Age'] = current_age
     projections.loc[0, 'Year'] = CURRENT_YEAR
     projections.loc[0, 'Salary'] = annual_salary
-    projections.loc[0, 'Bonus'] = annual_bonus
-    projections.loc[0, 'RSU'] = annual_rsu
     projections.loc[0, 'High-Yield Savings'] = current_savings
-    projections.loc[0, 'Roth IRA'] = current_roth_ira
     projections.loc[0, 'Traditional IRA'] = current_trad_ira
-    projections.loc[0, 'HSA'] = current_hsa
-    projections.loc[0, 'Roth 401k'] = current_roth_401k
     projections.loc[0, 'Traditional 401k'] = current_trad_401k
     projections.loc[0, 'Monthly Expenses'] = monthly_expenses
     projections.loc[0, 'Annual Expenses'] = monthly_expenses * 12
     projections.loc[0, 'Total Balance'] = calculate_total_current_savings(
-        current_savings, current_roth_ira, current_trad_ira, 
-        current_hsa, current_roth_401k, current_trad_401k
+        current_savings, current_trad_ira, current_trad_401k
     )
     
     # Set up contribution limits with annual increases
@@ -140,15 +126,11 @@ def calculate_retirement_projections(
                 current_merit_rate = reduced_merit_rate
             
             projections.loc[year, 'Salary'] = projections.loc[year-1, 'Salary'] * (1 + current_merit_rate)
-            
-            # Adjust bonus and RSU with merit increase too
-            projections.loc[year, 'Bonus'] = projections.loc[year-1, 'Bonus'] * (1 + current_merit_rate)
-            projections.loc[year, 'RSU'] = projections.loc[year-1, 'RSU'] * (1 + current_merit_rate)
         
         # Current year values
         salary = projections.loc[year, 'Salary']
         annual_expenses = projections.loc[year, 'Annual Expenses']
-        total_income = salary + projections.loc[year, 'Bonus'] + projections.loc[year, 'RSU']
+        total_income = salary
         
         # PRE-RETIREMENT CALCULATIONS
         if not is_retirement:
@@ -196,10 +178,7 @@ def calculate_retirement_projections(
             # Add employer contribution to Traditional 401k
             annual_trad_401k_contribution += employer_contribution
             
-            # Calculate HSA contribution
-            employee_hsa_contribution = max(0, min(contribution_limits['HSA'] - employer_hsa_contribution, 
-                                              contribution_limits['HSA'] * 0.8))  # Realistic employee contribution
-            total_hsa_contribution = employee_hsa_contribution + employer_hsa_contribution
+            # HSA contribution removed
             
             # Limit IRA contribution based on IRS income limits (simplified)
             effective_ira_contribution = annual_ira_contribution
@@ -223,23 +202,8 @@ def calculate_retirement_projections(
             # Retirement accounts with market returns - use nominal returns for compound growth
             adjusted_return = get_adjusted_return(year, nominal_investment_return)
             
-            projections.loc[year, 'Roth IRA'] = (
-                projections.loc[year-1, 'Roth IRA'] * (1 + adjusted_return) + 
-                min(effective_ira_contribution, contribution_limits['IRA'])
-            )
-            
             projections.loc[year, 'Traditional IRA'] = (
                 projections.loc[year-1, 'Traditional IRA'] * (1 + adjusted_return)
-            )
-            
-            projections.loc[year, 'HSA'] = (
-                projections.loc[year-1, 'HSA'] * (1 + adjusted_return) + 
-                total_hsa_contribution
-            )
-            
-            projections.loc[year, 'Roth 401k'] = (
-                projections.loc[year-1, 'Roth 401k'] * (1 + adjusted_return) + 
-                annual_roth_401k_contribution
             )
             
             projections.loc[year, 'Traditional 401k'] = (
@@ -250,7 +214,6 @@ def calculate_retirement_projections(
             # Add annual contributions for reference
             projections.loc[year, '401k Contribution'] = annual_401k_contribution
             projections.loc[year, 'Employer 401k Match'] = employer_contribution
-            projections.loc[year, 'HSA Contribution'] = total_hsa_contribution
             projections.loc[year, 'IRA Contribution'] = min(effective_ira_contribution, contribution_limits['IRA'])
             
         # RETIREMENT PHASE CALCULATIONS
@@ -258,7 +221,6 @@ def calculate_retirement_projections(
             # Set contributions to 0 in retirement
             projections.loc[year, '401k Contribution'] = 0
             projections.loc[year, 'Employer 401k Match'] = 0
-            projections.loc[year, 'HSA Contribution'] = 0
             projections.loc[year, 'IRA Contribution'] = 0
             
             # Use a more conservative return rate in retirement
@@ -272,25 +234,17 @@ def calculate_retirement_projections(
             retirement_return = adjusted_return * 0.9  # Only 10% reduction in retirement
             
             high_yield_savings_growth = projections.loc[year-1, 'High-Yield Savings'] * nominal_savings_apy
-            roth_ira_growth = projections.loc[year-1, 'Roth IRA'] * retirement_return
             trad_ira_growth = projections.loc[year-1, 'Traditional IRA'] * retirement_return
-            hsa_growth = projections.loc[year-1, 'HSA'] * retirement_return
-            roth_401k_growth = projections.loc[year-1, 'Roth 401k'] * retirement_return
             trad_401k_growth = projections.loc[year-1, 'Traditional 401k'] * retirement_return
             
             # Apply growth to accounts
             projections.loc[year, 'High-Yield Savings'] = projections.loc[year-1, 'High-Yield Savings'] + high_yield_savings_growth
-            projections.loc[year, 'Roth IRA'] = projections.loc[year-1, 'Roth IRA'] + roth_ira_growth
             projections.loc[year, 'Traditional IRA'] = projections.loc[year-1, 'Traditional IRA'] + trad_ira_growth
-            projections.loc[year, 'HSA'] = projections.loc[year-1, 'HSA'] + hsa_growth
-            projections.loc[year, 'Roth 401k'] = projections.loc[year-1, 'Roth 401k'] + roth_401k_growth
             projections.loc[year, 'Traditional 401k'] = projections.loc[year-1, 'Traditional 401k'] + trad_401k_growth
             
             # Withdrawal strategy in order:
             # 1. Taxable accounts (High-Yield Savings)
             # 2. Traditional accounts (taxed on withdrawal)
-            # 3. Roth accounts (tax-free)
-            # 4. HSA (for qualified medical expenses)
             
             # First withdraw from High-Yield Savings
             high_yield_withdrawal = min(withdrawal_needed, projections.loc[year, 'High-Yield Savings'])
@@ -326,27 +280,7 @@ def calculate_retirement_projections(
             else:
                 projections.loc[year, 'Taxes Paid'] = 0
             
-            # If more needed, withdraw from Roth accounts
-            if withdrawal_needed > 0:
-                # Apportion between Roth 401k and IRA
-                total_roth = projections.loc[year, 'Roth 401k'] + projections.loc[year, 'Roth IRA']
-                if total_roth > 0:
-                    roth_401k_ratio = projections.loc[year, 'Roth 401k'] / total_roth
-                    roth_ira_ratio = projections.loc[year, 'Roth IRA'] / total_roth
-                    
-                    roth_401k_withdrawal = min(withdrawal_needed * roth_401k_ratio, projections.loc[year, 'Roth 401k'])
-                    roth_ira_withdrawal = min(withdrawal_needed * roth_ira_ratio, projections.loc[year, 'Roth IRA'])
-                    
-                    projections.loc[year, 'Roth 401k'] -= roth_401k_withdrawal
-                    projections.loc[year, 'Roth IRA'] -= roth_ira_withdrawal
-                    
-                    withdrawal_needed -= (roth_401k_withdrawal + roth_ira_withdrawal)
-            
-            # If more needed, withdraw from HSA (assuming qualified medical expenses)
-            if withdrawal_needed > 0:
-                hsa_withdrawal = min(withdrawal_needed, projections.loc[year, 'HSA'])
-                projections.loc[year, 'HSA'] -= hsa_withdrawal
-                withdrawal_needed -= hsa_withdrawal
+            # Roth accounts and HSA withdrawal removed
             
             # If still needed more than available, mark as shortfall
             if withdrawal_needed > 0:
@@ -357,19 +291,15 @@ def calculate_retirement_projections(
         # Calculate total balance
         projections.loc[year, 'Total Balance'] = (
             projections.loc[year, 'High-Yield Savings'] +
-            projections.loc[year, 'Roth IRA'] +
             projections.loc[year, 'Traditional IRA'] +
-            projections.loc[year, 'HSA'] +
-            projections.loc[year, 'Roth 401k'] +
             projections.loc[year, 'Traditional 401k']
         )
     
     # Format currency columns
     for col in [
-        'Salary', 'Bonus', 'RSU', 'High-Yield Savings', 'Roth IRA', 
-        'Traditional IRA', 'HSA', 'Roth 401k', 'Traditional 401k', 
+        'Salary', 'High-Yield Savings', 'Traditional IRA', 'Traditional 401k', 
         'Total Balance', '401k Contribution', 'Employer 401k Match',
-        'HSA Contribution', 'IRA Contribution', 'Monthly Expenses',
+        'IRA Contribution', 'Monthly Expenses',
         'Annual Expenses', 'Taxes Paid', 'After-Tax Income', 
         'Disposable Income', 'Retirement Shortfall'
     ]:
