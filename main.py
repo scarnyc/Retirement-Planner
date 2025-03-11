@@ -264,12 +264,8 @@ with insights_col1:
     inflation_adjusted_monthly_income = inflation_adjusted_balance * 0.04 / 12
     st.markdown(f"* **Present Value of Monthly Income:** ${inflation_adjusted_monthly_income:,.0f}")
     
-    # Compare to current expenses
+    # Calculate income ratio for use in the other column
     income_ratio = monthly_retirement_income / projection_data.iloc[-1]['Monthly Expenses']
-    if income_ratio >= 1:
-        st.success(f"Projected monthly income covers {income_ratio:.1f}x your future expenses")
-    else:
-        st.warning(f"Projected monthly income covers only {income_ratio:.1f}x your future expenses")
 
 with insights_col2:
     st.subheader("Optimization Opportunities")
@@ -300,6 +296,12 @@ with insights_col2:
     # Expense inflation awareness
     retirement_year_expenses = projection_data.loc[projection_data['Age'] == retirement_age, 'Annual Expenses'].values[0]
     st.info(f"Your current monthly expenses will grow to approximately ${retirement_year_expenses/12:,.0f} per month by retirement due to inflation.")
+    
+    # Show expense coverage ratio
+    if income_ratio >= 1:
+        st.success(f"Projected monthly income covers {income_ratio:.1f}x your future expenses")
+    else:
+        st.warning(f"Projected monthly income covers only {income_ratio:.1f}x your future expenses")
 
 # Footer
 st.markdown("---")
