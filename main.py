@@ -177,7 +177,11 @@ with projection_tabs[1]:
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
             plot_bgcolor='#F5F7FA',
             paper_bgcolor='#F5F7FA',
-            yaxis=dict(gridcolor='#E0E0E0', tickformat='$,.0f'),
+            yaxis=dict(gridcolor='#E0E0E0', tickformat='$,.0f', title_font=dict(color='#333333'), tickfont=dict(color='#333333')),
+            xaxis=dict(title_font=dict(color='#333333'), tickfont=dict(color='#333333')),
+            title_font=dict(color='#333333'),
+            legend_font=dict(color='#333333'),
+            font=dict(color='#333333'),
             height=500
         )
         
