@@ -10,6 +10,43 @@ This dashboard is designed to help users visualize and project their retirement 
     Key Time Horizon Visualizations: Presents savings projections at key time horizons using interactive Plotly graphs for easy understanding of long-term growth.
     Detailed Income and Expense Modeling: Accounts for various income sources (salary, bonus, RSU, dividends) and expenses, including annual paychecks and employer contributions.
 
+## PRD (Replit Agent Prompt)
+
+A comprehensive retirement savings calculator dashboard that helps visualize and project retirement savings considering multiple income sources, deductions, and economic factors at key time horizons.
+
+Core Features:
+Calculate and display retirement savings projections considering salary, bonuses, RSUs, and investment returns (401k, HSA, IRA, HYS)
+Factor in tax implications (federal and NY state), inflation adjustments, and maximum contribution limits
+Show savings projections at key time horizons using Plotly graphs
+Account for expenses, 26 annual paychecks, employer contributions, and dividend income
+
+Retirement Horizon:
+Current Age: 35 years
+Retirement Age: 65 years
+Years Until Retirement: 30 years
+Current Balances:
+Current savings: $50,000
+Current Traditional IRA: $50,000
+Current Traditional 401k: $50,000
+Current monthly expenses: $4,000
+Current Assumptions:
+Annual salary: $100,000
+Annual Merit Increase: 3.25%
+Annual Investment Return: 6% (a common assumption for long-term stock market returns)
+Current APY on savings: 3.8%
+Annual 401k contributions: Annual Maximum (currently $23,500 in 2025)
+Annual IRA contributions: $0
+401k traditional contribution 8% per paycheck
+Employer 401k match: 6%
+Visual References:
+Inspired by Vanguard's retirement planning tools and Fidelity's wealth management dashboards, known for their clear financial data visualization and projection tools.
+
+Style Guide:
+Colors: Primary #006D75 (teal), Secondary #2E5E82 (navy), Accent #FFB74D (gold), Background #F5F7FA (light grey), Text #333333 (dark grey), Success #4CAF50 (green)
+Design: Inter/Roboto fonts, clean dashboard layout with input forms and large visualization areas, clear data labels, responsive design with easy-to-read numbers and charts
+
+Don’t write the code yet. For now, just come up with the plan.
+
 ## Data and Assumptions
 
 The dashboard utilizes user-provided data on current savings, income, and expenses, along with assumptions on investment returns, inflation, and contribution limits. Default values are provided based on common financial planning guidelines, but users can customize these to match their individual circumstances.
