@@ -3,6 +3,9 @@
 
 This dashboard is designed to help users visualize and project their retirement savings, taking into account various income sources, deductions, and economic factors. It aims to provide a comprehensive view of financial health at key time horizons, guiding informed decision-making for a secure retirement.  
 
+## Disclaimer
+The information provided and the associated retirement planning app are for informational purposes only and should not be considered financial advice. Consult with a qualified financial advisor before making any investment decisions.
+
 ## Features
 
     Comprehensive Savings Projections: Calculates and displays retirement savings projections based on salary, bonuses, RSUs, and investment returns across various accounts (401k, HSA, IRA, HYS).
